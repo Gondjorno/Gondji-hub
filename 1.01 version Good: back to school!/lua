@@ -1,0 +1,414 @@
+-- Скрипт чита для Roblox: Good: back to school!
+-- Активация: вставить в исполнитель скриптов (например, Synapse X, Krnl, Fluxus)
+
+-- Загрузка UI библиотеки
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Robojini/Tuturial_UI_Library/main/UI_Template_1"))()
+
+-- Создание главного окна
+local Window = Library.CreateLib("Good: Back to School Cheats", "RJTheme3")
+
+-- Вкладка "Персонаж"
+local PlayerTab = Window:NewTab("Персонаж")
+local PlayerSection = PlayerTab:NewSection("Управление персонажем")
+
+-- Спидхак
+PlayerSection:NewSlider("Скорость передвижения", "Изменяет скорость ходьбы", 300, 16, function(speed)
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = speed
+end)
+
+-- Прыжок
+PlayerSection:NewSlider("Сила прыжка", "Изменяет высоту прыжка", 200, 50, function(jump)
+    game.Players.LocalPlayer.Character.Humanoid.JumpPower = jump
+end)
+
+-- Ноклип
+local noclipEnabled = false
+PlayerSection:NewToggle("Ноклип", "Позволяет проходить сквозь стены", function(state)
+    noclipEnabled = state
+    if state then
+        game:GetService('RunService').Stepped:connect(function()
+            if noclipEnabled and game.Players.LocalPlayer.Character ~= nil then
+                for _, part in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        part.CanCollide = false
+                    end
+                end
+            end
+        end)
+    end
+end)
+
+-- Вкладка "Телепорт"
+local TeleportTab = Window:NewTab("Телепорт")
+
+-- Секция зон телепортации
+local ZonesSection = TeleportTab:NewSection("Зоны телепортации")
+
+-- Spawn
+ZonesSection:NewButton("Spawn", "Телепортирует к точке спавна", function()
+    local spawnCFrame = CFrame.new(
+        107.50882, 16.8712444, -182.941391, 
+        -0.960915089, 0.0393716805, 0.274029285, 
+        -0.0203002356, 0.977150083, -0.21157898, 
+        -0.276097953, -0.208872303, -0.938158989
+    )
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = spawnCFrame
+end)
+
+-- Frozen Zone
+ZonesSection:NewButton("Frozen Zone", "Телепортирует к ледяной зоне", function()
+    local frozenCFrame = CFrame.new(
+        -1122.15942, 12.2417574, -791.136841, 
+        0.2391105, 0.121045582, 0.963417947, 
+        0.000551294885, 0.992182195, -0.124796405, 
+        -0.970992208, 0.030371258, 0.237174451
+    )
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = frozenCFrame
+end)
+
+-- Summer Zone
+ZonesSection:NewButton("Summer Zone", "Телепортирует к летней зоне", function()
+    local summerCFrame = CFrame.new(
+        -866.491272, 8.9363842, -378.217407, 
+        -0.506259024, 0.0695049018, 0.859575987, 
+        0.0123964772, 0.997230351, -0.0733345002, 
+        -0.862292349, -0.0264705382, -0.50571847
+    )
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = summerCFrame
+end)
+
+-- Zone 1
+ZonesSection:NewButton("Zone 1", "Телепортирует к зоне 1", function()
+    local zone1CFrame = CFrame.new(
+        706.884705, 14.2887058, -614.600525, 
+        0.145804182, -0.0375707261, -0.988599837, 
+        0.0218057968, 0.999157906, -0.0347559378, 
+        0.989073098, -0.0164896455, 0.146500662
+    )
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = zone1CFrame
+end)
+
+-- Zone 2
+ZonesSection:NewButton("Zone 2", "Телепортирует к зоне 2", function()
+    local zone2CFrame = CFrame.new(
+        579.447632, 17.2280197, -1218.63135, 
+        0.788771868, -0.0990948901, -0.606645823, 
+        -0.0116451094, 0.984333634, -0.175930932, 
+        0.614575744, 0.14583382, 0.775260687
+    )
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = zone2CFrame
+end)
+
+-- Zone 3
+ZonesSection:NewButton("Zone 3", "Телепортирует к зоне 3", function()
+    local zone3CFrame = CFrame.new(
+        579.447632, 17.2280197, -1218.63135, 
+        0.788771868, -0.0990948901, -0.606645823, 
+        -0.0116451094, 0.984333634, -0.175930932, 
+        0.614575744, 0.14583382, 0.775260687
+    )
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = zone3CFrame
+end)
+
+-- Lava Zone
+ZonesSection:NewButton("Lava Zone", "Телепортирует к лавовой зоне", function()
+    local lavaCFrame = CFrame.new(
+        -1118.41821, 13.3625908, -1624.63892, 
+        0.0606532134, -0.103671335, 0.992760539, 
+        0.0531881601, 0.993514299, 0.100500494, 
+        -0.996740818, 0.0467074253, 0.0657739267
+    )
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = lavaCFrame
+end)
+
+-- Секция сундуков и Drop Zone
+local ChestsSection = TeleportTab:NewSection("Сундуки и Drop Zone")
+
+-- Функция для поиска сундуков
+local function findChests()
+    local chests = {}
+    
+    -- Поиск всех сундуков Chest1 в Workspace
+    for _, obj in pairs(game.Workspace:GetDescendants()) do
+        if obj:IsA("Model") and obj.Name == "Chest1" then
+            table.insert(chests, obj)
+        end
+    end
+    
+    return chests
+end
+
+-- Функция для поиска предметов Item (от 1 до 40)
+local function findItems()
+    local items = {}
+    
+    -- Поиск предметов с именами Item1, Item2, ..., Item40
+    for i = 1, 40 do
+        local itemName = "Item" .. i
+        for _, obj in pairs(game.Workspace:GetDescendants()) do
+            if obj:IsA("Model") and obj.Name == itemName then
+                table.insert(items, obj)
+            end
+        end
+    end
+    
+    -- Также ищем просто "Item" на случай если есть без номера
+    for _, obj in pairs(game.Workspace:GetDescendants()) do
+        if obj:IsA("Model") and obj.Name == "Item" then
+            table.insert(items, obj)
+        end
+    end
+    
+    return items
+end
+
+-- Функция для определения моего Drop Zone через LocalScript
+local function findMyDropZone()
+    local player = game.Players.LocalPlayer
+    
+    -- Поиск в лодке игрока
+    for _, obj in pairs(game.Workspace:GetDescendants()) do
+        if obj:IsA("Part") and obj.Name == "DropZone" then
+            -- Проверяем, принадлежит ли эта лодка игроку через родительские объекты
+            local parentModel = obj:FindFirstAncestorOfClass("Model")
+            if parentModel then
+                -- Проверяем наличие скриптов лодки
+                local boatControl = parentModel:FindFirstChild("BoatControl")
+                if boatControl then
+                    -- Проверяем, есть ли LocalScript, который может указывать на владельца
+                    local localScripts = parentModel:GetDescendants()
+                    for _, script in pairs(localScripts) do
+                        if script:IsA("LocalScript") then
+                            -- Предполагаем, что лодка с LocalScript принадлежит текущему игроку
+                            return obj
+                        end
+                    end
+                end
+            end
+        end
+    end
+    
+    return nil
+end
+
+-- Телепорт всех сундуков к себе
+ChestsSection:NewButton("Притянуть все сундуки", "Телепортирует все сундуки к игроку", function()
+    local chests = findChests()
+    local playerPos = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+    
+    for i, chest in pairs(chests) do
+        -- Создаем позицию вокруг игрока
+        local angle = (i / #chests) * math.pi * 2
+        local radius = 5
+        local offset = Vector3.new(math.cos(angle) * radius, 3, math.sin(angle) * radius)
+        local targetPosition = playerPos + offset
+        
+        -- Перемещаем сундук
+        if chest:FindFirstChild("PrimaryPart") then
+            chest:PivotTo(CFrame.new(targetPosition))
+        else
+            -- Если нет PrimaryPart, перемещаем все части
+            local chestCFrame = chest:GetPivot()
+            chest:PivotTo(CFrame.new(targetPosition) * (chestCFrame - chestCFrame.Position))
+        end
+    end
+end)
+
+-- Телепорт всех предметов к себе
+ChestsSection:NewButton("Притянуть все предметы", "Телепортирует все предметы (Item1-Item40) к игроку", function()
+    local items = findItems()
+    local playerPos = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+    
+    for i, item in pairs(items) do
+        -- Создаем позицию вокруг игрока
+        local angle = (i / #items) * math.pi * 2
+        local radius = 4
+        local offset = Vector3.new(math.cos(angle) * radius, 2, math.sin(angle) * radius)
+        local targetPosition = playerPos + offset
+        
+        -- Перемещаем предмет
+        if item:FindFirstChild("PrimaryPart") then
+            item:PivotTo(CFrame.new(targetPosition))
+        else
+            -- Если нет PrimaryPart, перемещаем все части
+            local itemCFrame = item:GetPivot()
+            item:PivotTo(CFrame.new(targetPosition) * (itemCFrame - itemCFrame.Position))
+        end
+    end
+end)
+
+-- Авто-притягивание сундуков
+local autoPullChestsEnabled = false
+ChestsSection:NewToggle("Авто-притягивание сундуков", "Автоматически притягивает сундуки к игроку", function(state)
+    autoPullChestsEnabled = state
+    
+    if state then
+        spawn(function()
+            while autoPullChestsEnabled do
+                wait(3) -- Проверка каждые 3 секунды
+                
+                local chests = findChests()
+                local playerPos = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+                
+                for i, chest in pairs(chests) do
+                    if not autoPullChestsEnabled then break end
+                    
+                    -- Проверяем расстояние до сундука
+                    local chestPos = chest:GetPivot().Position
+                    local distance = (playerPos - chestPos).Magnitude
+                    
+                    -- Если сундук далеко, притягиваем его
+                    if distance > 20 then
+                        local angle = (i / #chests) * math.pi * 2
+                        local radius = 4
+                        local offset = Vector3.new(math.cos(angle) * radius, 2, math.sin(angle) * radius)
+                        local targetPosition = playerPos + offset
+                        
+                        if chest:FindFirstChild("PrimaryPart") then
+                            chest:PivotTo(CFrame.new(targetPosition))
+                        else
+                            local chestCFrame = chest:GetPivot()
+                            chest:PivotTo(CFrame.new(targetPosition) * (chestCFrame - chestCFrame.Position))
+                        end
+                    end
+                end
+            end
+        end)
+    end
+end)
+
+-- Авто-притягивание предметов
+local autoPullItemsEnabled = false
+ChestsSection:NewToggle("Авто-притягивание предметов", "Автоматически притягивает предметы к игроку", function(state)
+    autoPullItemsEnabled = state
+    
+    if state then
+        spawn(function()
+            while autoPullItemsEnabled do
+                wait(3) -- Проверка каждые 3 секунды
+                
+                local items = findItems()
+                local playerPos = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+                
+                for i, item in pairs(items) do
+                    if not autoPullItemsEnabled then break end
+                    
+                    -- Проверяем расстояние до предмета
+                    local itemPos = item:GetPivot().Position
+                    local distance = (playerPos - itemPos).Magnitude
+                    
+                    -- Если предмет далеко, притягиваем его
+                    if distance > 20 then
+                        local angle = (i / #items) * math.pi * 2
+                        local radius = 3
+                        local offset = Vector3.new(math.cos(angle) * radius, 1, math.sin(angle) * radius)
+                        local targetPosition = playerPos + offset
+                        
+                        if item:FindFirstChild("PrimaryPart") then
+                            item:PivotTo(CFrame.new(targetPosition))
+                        else
+                            local itemCFrame = item:GetPivot()
+                            item:PivotTo(CFrame.new(targetPosition) * (itemCFrame - itemCFrame.Position))
+                        end
+                    end
+                end
+            end
+        end)
+    end
+end)
+
+-- Телепорт к моему Drop Zone
+ChestsSection:NewButton("Телепорт к моему Drop Zone", "Телепортирует к вашей зоне высадки", function()
+    local myDropZone = findMyDropZone()
+    if myDropZone then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(myDropZone.Position + Vector3.new(0, 5, 0))
+    else
+        -- Если не нашли свою Drop Zone, ищем любую доступную
+        for _, obj in pairs(game.Workspace:GetDescendants()) do
+            if obj:IsA("Part") and obj.Name == "DropZone" then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(obj.Position + Vector3.new(0, 5, 0))
+                break
+            end
+        end
+    end
+end)
+
+-- Функция для поиска всех Drop Zones
+local function findAllDropZones()
+    local dropZones = {}
+    
+    for _, obj in pairs(game.Workspace:GetDescendants()) do
+        if obj:IsA("Part") and obj.Name == "DropZone" then
+            table.insert(dropZones, obj)
+        end
+    end
+    
+    return dropZones
+end
+
+-- Телепорт к ближайшей Drop Zone
+ChestsSection:NewButton("Телепорт к ближайшей Drop Zone", "Телепортирует к ближайшей зоне высадки", function()
+    local playerPos = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+    local allDropZones = findAllDropZones()
+    local closestDropZone = nil
+    local closestDistance = math.huge
+    
+    for _, dropZone in pairs(allDropZones) do
+        local distance = (playerPos - dropZone.Position).Magnitude
+        if distance < closestDistance then
+            closestDistance = distance
+            closestDropZone = dropZone
+        end
+    end
+    
+    if closestDropZone then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(closestDropZone.Position + Vector3.new(0, 5, 0))
+    end
+end)
+
+-- Вкладка "Визуал"
+local VisualTab = Window:NewTab("Визуал")
+local VisualSection = VisualTab:NewSection("Визуальные настройки")
+
+-- Яркость
+VisualSection:NewSlider("Яркость", "Изменяет яркость игры", 10, 0, function(brightness)
+    game.Lighting.Brightness = brightness
+end)
+
+-- Время суток
+VisualSection:NewSlider("Время суток", "Изменяет время дня", 24, 0, function(time)
+    game.Lighting.TimeOfDay = time
+end)
+
+-- Вкладка "Другое"
+local OtherTab = Window:NewTab("Другое")
+local OtherSection = OtherTab:NewSection("Дополнительные функции")
+
+-- Анти-афк
+OtherSection:NewToggle("Анти-АФК", "Предотвращает отключение за бездействие", function(state)
+    if state then
+        local virtualUser = game:GetService('VirtualUser')
+        game:GetService('Players').LocalPlayer.Idled:connect(function()
+            virtualUser:CaptureController()
+            virtualUser:ClickButton2(Vector2.new())
+        end)
+    end
+end)
+
+-- FPS unlock
+OtherSection:NewToggle("Разблокировка FPS", "Убирает ограничение FPS", function(state)
+    if state then
+        setfpscap(999)
+    else
+        setfpscap(60)
+    end
+end)
+
+-- Информация
+OtherSection:NewLabel("Версия: 1.0")
+OtherSection:NewLabel("Для режима: Good: back to school!")
+
+-- Бинд на открытие/закрытие меню
+OtherSection:NewKeybind("Открыть/Закрыть меню", "Основная клавиша меню", Enum.KeyCode.RightShift, function()
+    Library:ToggleUI()
+end)
